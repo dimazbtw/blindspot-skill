@@ -1,0 +1,14 @@
+{
+  "categories": {
+    "trust": {
+      "adjustment": -1.0,
+      "reason": "Two of the skeptic's three tasks ended in difficulty and one persona could not find any way to call; the penalty model counts one moderate finding.",
+      "justification": "One moderate finding (no phone, email or address), consistent across three sessions, plus a skeptic who could not verify the business. Text-only evidence, so the score is capped at the medium-confidence ceiling."
+    }
+  },
+  "persona_verdicts": [
+    { "persona": "first-timer", "would_return": "maybe", "would_recommend": "no", "one_line": "Pretty photos, but I could not tell what they sell or what it costs." },
+    { "persona": "low-literacy", "would_return": "no", "would_recommend": "no", "one_line": "I could not work out how to order and there was no number to call." },
+    { "persona": "skeptic", "would_return": "maybe", "would_recommend": "maybe", "one_line": "The FAQ reassured me, but I could not confirm they are a real business." }
+  ]
+}

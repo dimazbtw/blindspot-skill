@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0",
+  "site": {
+    "url": "https://brightleaf-bakery.example",
+    "slug": "brightleaf-bakery.example",
+    "type": "lead-gen-local"
+  },
+  "run": {
+    "number": 1,
+    "mode": "full",
+    "date": "2026-10-14",
+    "evidence_tier": "text",
+    "isolation": "full",
+    "weight_profile": "default"
+  },
+  "categories": {
+    "clarity": {
+      "status": "assessed",
+      "weight": 18,
+      "computed_score": 6.5,
+      "adjustment": 0.0,
+      "adjustment_reason": "",
+      "final_score": 6.5,
+      "confidence": "medium",
+      "coverage": 1.0,
+      "caps_applied": [
+        "major problem present: capped at 6.5"
+      ],
+      "finding_counts": {
+        "blocker": 0,
+        "major": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "needs_validation_count": 0,
+      "justification": "1 major; coverage 100%; evidence tier text."
+    },
+    "navigation": {
+      "status": "assessed",
+      "weight": 12,
+      "computed_score": 6.5,
+      "adjustment": 0.0,
+      "adjustment_reason": "",
+      "final_score": 6.5,
+      "confidence": "medium",
+      "coverage": 1.0,
+      "caps_applied": [
+        "major problem present: capped at 6.5"
+      ],
+      "finding_counts": {
+        "blocker": 0,
+        "major": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "needs_validation_count": 0,
+      "justification": "1 major; coverage 100%; evidence tier text."
+    },
+    "trust": {
+      "status": "assessed",
+      "weight": 14,
+      "computed_score": 9.0,
+      "adjustment": -1.0,
+      "adjustment_reason": "Two of the skeptic's three tasks ended in difficulty and one persona could not find any way to call; the penalty model counts one moderate finding.",
+      "final_score": 8.0,
+      "confidence": "medium",
+      "coverage": 1.0,
+      "caps_applied": [
+        "medium confidence: capped at 9.0"
+      ],
+      "finding_counts": {
+        "blocker": 0,
+        "major": 0,
+        "moderate": 1,
+        "minor": 0
+      },
+      "needs_validation_count": 0,
+      "justification": "One moderate finding (no phone, email or address), consistent across three sessions, plus a skeptic who could not verify the business. Text-only evidence, so the score is capped at the medium-confidence ceiling."
+    },
+    "content": {
+      "status": "assessed",
+      "weight": 12,
+      "computed_score": 6.5,
+      "adjustment": 0.0,
+      "adjustment_reason": "",
+      "final_score": 6.5,
+      "confidence": "high",
+      "coverage": 1.0,
+      "caps_applied": [
+        "major problem present: capped at 6.5"
+      ],
+      "finding_counts": {
+        "blocker": 0,
+        "major": 1,
+        "moderate": 0,
+        "minor": 1
+      },
+      "needs_validation_count": 0,
+      "justification": "1 major, 1 minor; coverage 100%; evidence tier text."
+    },
+    "design": {
+      "status": "not_assessed",
+      "weight": 8,
+      "reason": "design cannot be judged from text-only evidence"
+    },
+    "flows": {
+      "status": "assessed",
+      "weight": 16,
+      "computed_score": 6.5,
+      "adjustment": 0.0,
+      "adjustment_reason": "",
+      "final_score": 6.5,
+      "confidence": "low",
+      "coverage": 1.0,
+      "caps_applied": [
+        "major problem present: capped at 6.5"
+      ],
+      "finding_counts": {
+        "blocker": 0,
+        "major": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "needs_validation_count": 0,
+      "justification": "1 major; coverage 100%; evidence tier text."
+    },
+    "mobile": {
+      "status": "not_assessed",
+      "weight": 12,
+      "reason": "mobile cannot be judged from text-only evidence"
+    },
+    "accessibility": {
+      "status": "assessed",
+      "weight": 8,
+      "computed_score": 7.5,
+      "adjustment": 0.0,
+      "adjustment_reason": "",
+      "final_score": 7.5,
+      "confidence": "low",
+      "coverage": 0.5,
+      "caps_applied": [
+        "low confidence: capped at 7.5"
+      ],
+      "finding_counts": {
+        "blocker": 0,
+        "major": 0,
+        "moderate": 0,
+        "minor": 0
+      },
+      "needs_validation_count": 1,
+      "justification": "no confirmed problems; coverage 50%; evidence tier text."
+    }
+  },
+  "global": {
+    "score": 6.9,
+    "band": "fair",
+    "assessed_weight": 0.8,
+    "confidence": "medium",
+    "provisional": false,
+    "floor_warning": [],
+    "note": "Computed over 6 of 8 categories (80% of the weight, weights renormalised); not assessed: design, mobile."
+  },
+  "task_metrics": {
+    "attempted": 9,
+    "success_rate": 0.667,
+    "difficulty_rate": 0.5,
+    "abandon_rate": 0.222,
+    "incorrect_rate": 0.111,
+    "blocked_count": 0,
+    "mean_efficiency": 0.615,
+    "first_click_success_rate": 0.333,
+    "by_persona": [
+      {
+        "persona": "first-timer",
+        "attempted": 3,
+        "completed": 1,
+        "completed_with_difficulty": 1,
+        "completed_incorrectly": 0,
+        "abandoned": 1,
+        "blocked": 0
+      },
+      {
+        "persona": "low-literacy",
+        "attempted": 3,
+        "completed": 1,
+        "completed_with_difficulty": 0,
+        "completed_incorrectly": 1,
+        "abandoned": 1,
+        "blocked": 0
+      },
+      {
+        "persona": "skeptic",
+        "attempted": 3,
+        "completed": 1,
+        "completed_with_difficulty": 2,
+        "completed_incorrectly": 0,
+        "abandoned": 0,
+        "blocked": 0
+      }
+    ]
+  },
+  "first_impression_metrics": {
+    "personas_tested": 3,
+    "understood_what": 0.167,
+    "understood_audience": 0.333,
+    "understood_action": 0.167,
+    "mean_gut_rating": 2.667,
+    "would_continue_rate": 0.333
+  },
+  "persona_verdicts": [
+    {
+      "persona": "first-timer",
+      "would_return": "maybe",
+      "would_recommend": "no",
+      "one_line": "Pretty photos, but I could not tell what they sell or what it costs."
+    },
+    {
+      "persona": "low-literacy",
+      "would_return": "no",
+      "would_recommend": "no",
+      "one_line": "I could not work out how to order and there was no number to call."
+    },
+    {
+      "persona": "skeptic",
+      "would_return": "maybe",
+      "would_recommend": "maybe",
+      "one_line": "The FAQ reassured me, but I could not confirm they are a real business."
+    }
+  ]
+}

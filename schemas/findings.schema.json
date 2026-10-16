@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Findings record",
+  "description": "The structured output of Phase 5. Each finding is one of three verdicts: confirmed (verified problem with full evidence and severity), needs_validation (an exact unresolved fact, no severity), or rejected (a disproved candidate). Rules that JSON Schema cannot express (severity coherence, evidence tier limits, confidence requirements, quick-win derivation) are enforced by scripts/validate_findings.py.",
+  "type": "object",
+  "required": ["schema_version", "site", "run", "findings", "strengths"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "site": { "type": "string", "minLength": 4 },
+    "run": { "type": "integer", "minimum": 1 },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "strengths": { "type": "array", "items": { "$ref": "#/$defs/strength" } }
+  },
+  "$defs": {
+    "category": {
+      "enum": ["clarity", "navigation", "trust", "content", "design", "flows", "mobile", "accessibility"]
+    },
+    "tier": { "enum": ["rendered", "provided", "text"] },
+    "session_id": { "type": "string", "pattern": "^[SL][0-9]+$" },
+    "heuristic_ref": {
+      "type": "string",
+      "pattern": "^(NN-(10|[1-9])|WCAG-[1-4]\\.[0-9]+\\.[0-9]+|(NV|DS|CL|CT|TR|FL|MB)-[0-9]{2})$"
+    },
+    "evidence_item": {
+      "type": "object",
+      "required": ["kind", "tier", "url", "location", "session", "log_ref", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["observed", "inferred"] },
+        "tier": { "$ref": "#/$defs/tier" },
+        "url": { "type": "string", "minLength": 1 },
+        "location": { "type": "string", "minLength": 1 },
+        "session": { "$ref": "#/$defs/session_id" },
+        "log_ref": { "type": "string", "pattern": "^[SL][0-9]+-E[0-9]{2,3}$" },
+        "excerpt": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/evidence_item" }
+    },
+    "severity": {
+      "type": "object",
+      "required": ["impact", "frequency", "persistence", "overall_severity"],
+      "additionalProperties": false,
+      "properties": {
+        "impact": {
+          "type": "object",
+          "required": ["score", "reason"],
+          "additionalProperties": false,
+          "properties": {
+            "score": { "enum": ["cosmetic", "minor", "major", "blocking"] },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        },
+        "frequency": {
+          "type": "object",
+          "required": ["score", "reason"],
+          "additionalProperties": false,
+          "properties": {
+            "score": { "enum": ["rare", "occasional", "common", "universal"] },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "required": ["score", "reason"],
+          "additionalProperties": false,
+          "properties": {
+            "score": { "enum": ["one_time", "recurring"] },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        },
+        "overall_severity": { "enum": ["minor", "moderate", "major", "blocker"] }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["score", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "score": { "enum": ["low", "medium", "high"] },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reproduction": {
+      "type": "object",
+      "required": ["steps", "expected", "actual"],
+      "additionalProperties": false,
+      "properties": {
+        "steps": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "expected": { "type": "string", "minLength": 1 },
+        "actual": { "type": "string", "minLength": 1 }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "required": ["strategy", "effort"],
+      "additionalProperties": false,
+      "properties": {
+        "strategy": { "type": "string", "minLength": 1 },
+        "effort": { "enum": ["low", "medium", "high"] },
+        "copy_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["location", "after"],
+            "additionalProperties": false,
+            "properties": {
+              "location": { "type": "string", "minLength": 1 },
+              "before": { "type": "string" },
+              "after": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "required": ["source", "intended", "perceived"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "enum": ["brief", "inferred_goal"] },
+        "intended": { "type": "string", "minLength": 1 },
+        "perceived": { "type": "string", "minLength": 1 }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["verified", "corrected"] },
+        "notes": { "type": "string", "minLength": 1 },
+        "corrections": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "finding": {
+      "oneOf": [
+        { "$ref": "#/$defs/confirmed" },
+        { "$ref": "#/$defs/needs_validation" },
+        { "$ref": "#/$defs/rejected" }
+      ]
+    },
+    "confirmed": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "id",
+        "title",
+        "category",
+        "description",
+        "user_impact",
+        "root_cause",
+        "intended_behavior",
+        "evidence",
+        "reproduction",
+        "affected_personas",
+        "severity",
+        "confidence",
+        "baseline_comparison",
+        "remediation",
+        "quick_win",
+        "found_by"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": { "const": "confirmed" },
+        "id": { "type": "string", "pattern": "^P[0-9]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "category": { "$ref": "#/$defs/category" },
+        "description": { "type": "string", "minLength": 1 },
+        "user_impact": { "type": "string", "minLength": 1 },
+        "root_cause": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 400,
+          "description": "One sentence: <page or component> <does or lacks something specific>, which <consequence for the user>."
+        },
+        "intended_behavior": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the site appears to be trying to do, so the reader can see why this is a problem and not a deliberate choice that works."
+        },
+        "heuristic_refs": { "type": "array", "items": { "$ref": "#/$defs/heuristic_ref" } },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "reproduction": { "$ref": "#/$defs/reproduction" },
+        "affected_personas": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "severity": { "$ref": "#/$defs/severity" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "baseline_comparison": { "type": "string", "minLength": 1 },
+        "remediation": { "$ref": "#/$defs/remediation" },
+        "quick_win": { "type": "boolean" },
+        "found_by": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/session_id" } },
+        "gap": { "$ref": "#/$defs/gap" },
+        "persists_from": { "type": "string", "pattern": "^run-[0-9]+:P[0-9]+$" },
+        "verification": { "$ref": "#/$defs/verification" }
+      }
+    },
+    "needs_validation": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "id",
+        "title",
+        "category",
+        "description",
+        "evidence",
+        "open_question",
+        "resolution_path",
+        "found_by"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": { "const": "needs_validation" },
+        "id": { "type": "string", "pattern": "^P[0-9]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "category": { "$ref": "#/$defs/category" },
+        "description": { "type": "string", "minLength": 1 },
+        "heuristic_refs": { "type": "array", "items": { "$ref": "#/$defs/heuristic_ref" } },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "open_question": {
+          "type": "string",
+          "minLength": 10,
+          "description": "The exact fact that is still unresolved, phrased so it can be answered yes or no by whoever can check it."
+        },
+        "resolution_path": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Who or what can resolve the question: a rendered-browser check, the site owner, a real user session, an analytics query."
+        },
+        "affected_personas": { "type": "array", "items": { "type": "string" } },
+        "found_by": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/session_id" } },
+        "gap": { "$ref": "#/$defs/gap" },
+        "persists_from": { "type": "string", "pattern": "^run-[0-9]+:P[0-9]+$" }
+      }
+    },
+    "rejected": {
+      "type": "object",
+      "required": ["verdict", "id", "title", "reason", "rejection_class"],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": { "const": "rejected" },
+        "id": { "type": "string", "pattern": "^P[0-9]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "reason": { "type": "string", "minLength": 10 },
+        "rejection_class": {
+          "enum": [
+            "not_reproducible",
+            "intended_design",
+            "persona_overreach",
+            "environment_artifact",
+            "factually_wrong",
+            "duplicate",
+            "below_bar",
+            "out_of_scope"
+          ]
+        },
+        "found_by": { "type": "array", "items": { "$ref": "#/$defs/session_id" } }
+      }
+    },
+    "strength": {
+      "type": "object",
+      "required": ["id", "title", "category", "evidence", "why_it_works", "preserve_note"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^ST[0-9]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "category": { "$ref": "#/$defs/category" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "why_it_works": { "type": "string", "minLength": 1 },
+        "preserve_note": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

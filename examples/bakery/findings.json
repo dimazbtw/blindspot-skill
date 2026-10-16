@@ -1,0 +1,324 @@
+{
+  "schema_version": "1.0",
+  "site": "https://brightleaf-bakery.example",
+  "run": 1,
+  "findings": [
+    {
+      "verdict": "confirmed",
+      "id": "P1",
+      "title": "The home page never says what the bakery sells",
+      "category": "clarity",
+      "description": "The hero heading and subheading are a brand slogan. No product noun (cake, pastry, bread) and no primary action appear in the first heading, subheading or first 150 words.",
+      "user_impact": "Visitors cannot tell whether this is a bakery, a restaurant or a cookery school, so some leave before finding the order path and the rest guess where to click.",
+      "root_cause": "The home page hero names the brand story instead of the product, which leaves first-time visitors unable to say what is offered.",
+      "intended_behavior": "The hero is meant to create a warm artisan impression; that works only after a visitor already knows the business sells cakes.",
+      "heuristic_refs": ["CL-01", "CL-03"],
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "Hero heading and subheading", "session": "S1", "log_ref": "S1-E01",
+          "excerpt": "Crafted with care since 2009", "description": "In the five-second test the first-time visitor could not say whether the site sells bread, cakes, classes or something else." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "Hero heading and subheading", "session": "S2", "log_ref": "S2-E01",
+          "description": "The low-literacy persona guessed a restaurant and said she would not know where to click to order." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "First 150 words of the page", "session": "L2", "log_ref": "L2-E01",
+          "description": "CL-01 fails: no noun naming the product appears in the heading, subheading or first 150 words." }
+      ],
+      "reproduction": {
+        "steps": ["Open the home page.", "Read only the first heading, the subheading and the primary navigation labels.", "Write down what the business sells."],
+        "expected": "The visitor names the product (custom cakes and pastries) within five seconds.",
+        "actual": "Visitors name a lifestyle, a restaurant, or nothing."
+      },
+      "affected_personas": ["first-timer", "low-literacy"],
+      "severity": {
+        "impact": { "score": "major", "reason": "Visitors can still explore, but they cannot tell what is offered or what to do first." },
+        "frequency": { "score": "universal", "reason": "Every visitor lands on the hero." },
+        "persistence": { "score": "one_time", "reason": "Once a visitor learns what the business sells, the page stops being confusing." },
+        "overall_severity": "major"
+      },
+      "confidence": { "score": "high", "reason": "Three independent sessions reached the same conclusion from the same text." },
+      "baseline_comparison": "Bakery and food-shop sites conventionally name the product in the first heading; this site uses a brand slogan only.",
+      "remediation": {
+        "strategy": "Replace the hero heading with a sentence naming the product and the audience, and add one primary button toward ordering.",
+        "effort": "low",
+        "copy_changes": [
+          { "location": "Hero heading", "before": "Crafted with care since 2009", "after": "Custom cakes and pastries for your celebrations" },
+          { "location": "Hero button", "after": "Order a custom cake" }
+        ]
+      },
+      "quick_win": true,
+      "found_by": ["S1", "S2", "L2"],
+      "gap": {
+        "source": "inferred_goal",
+        "intended": "Inferred goal: collect custom cake order inquiries.",
+        "perceived": "A brand story with no visible product and no visible action."
+      },
+      "verification": { "status": "verified", "notes": "Re-fetched the home page: hero text unchanged and no product noun in the first 150 words." }
+    },
+    {
+      "verdict": "confirmed",
+      "id": "P2",
+      "title": "Menu labels are brand-speak and hide the ordering path",
+      "category": "navigation",
+      "description": "The main navigation uses 'Our Craft', 'Collections' and 'Atelier'. Custom cake ordering sits under Atelier > Bespoke Orders, and no header button points to it.",
+      "user_impact": "Visitors who want to order must guess which label leads there. One persona needed eight steps for a three-step task and another signed up for the newsletter believing it was the order form.",
+      "root_cause": "The main menu names sections after the brand's own vocabulary, which sends customers to the wrong page when they look for cakes or ordering.",
+      "intended_behavior": "The labels are meant to feel premium and consistent with the brand; they work only for people who already know the business.",
+      "heuristic_refs": ["NN-2", "NV-02", "CL-06"],
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/atelier", "location": "Main navigation, 'Atelier' item", "session": "S1", "log_ref": "S1-E03",
+          "excerpt": "The Atelier", "description": "The first-time visitor opened Atelier hoping for ordering and found a photo page with no ordering information." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "Footer newsletter block", "session": "S2", "log_ref": "S2-E03",
+          "description": "The low-literacy persona signed up for the newsletter believing it was how to order a cake." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "Main navigation labels", "session": "L1", "log_ref": "L1-E01",
+          "description": "NN-2 fails: none of the five labels uses the words customers use when they look for cakes or ordering." }
+      ],
+      "reproduction": {
+        "steps": ["Open the home page.", "Without reading anything else, choose the menu item you expect to lead to ordering a birthday cake.", "Follow it and note where you end up."],
+        "expected": "The first click lands on a page about ordering a cake, in three steps or fewer.",
+        "actual": "The first click lands on Collections or Atelier; reaching Bespoke Orders took eight steps for one persona and was never reached by another."
+      },
+      "affected_personas": ["first-timer", "low-literacy"],
+      "severity": {
+        "impact": { "score": "blocking", "reason": "One persona completed the wrong action instead of the order." },
+        "frequency": { "score": "common", "reason": "Two of the three personas were affected on the site's primary task." },
+        "persistence": { "score": "one_time", "reason": "Once the path is learned it is easy, but most visitors arrive without that knowledge." },
+        "overall_severity": "major"
+      },
+      "confidence": { "score": "high", "reason": "Three independent sessions, including one lens audit, point at the same labels." },
+      "baseline_comparison": "Local shop sites conventionally label the ordering route in plain words ('Order a cake', 'Cakes') and keep a persistent order button in the header.",
+      "remediation": {
+        "strategy": "Rename the menu items in customer vocabulary and add a persistent 'Order a cake' button in the header.",
+        "effort": "low",
+        "copy_changes": [
+          { "location": "Main navigation", "before": "Atelier", "after": "Custom cakes" },
+          { "location": "Main navigation", "before": "Collections", "after": "Cakes and pastries" },
+          { "location": "Header", "after": "Order a cake" }
+        ]
+      },
+      "quick_win": true,
+      "found_by": ["S1", "S2", "L1"],
+      "verification": {
+        "status": "corrected",
+        "notes": "One of three personas completed the task, so the problem slows and misleads users rather than preventing the task outright.",
+        "corrections": ["overall_severity: blocker -> major"]
+      }
+    },
+    {
+      "verdict": "confirmed",
+      "id": "P3",
+      "title": "No phone number, email or address to contact the business",
+      "category": "trust",
+      "description": "The contact page offers a form only. No phone number, email address or postal address appears on the contact page or in the footer.",
+      "user_impact": "Customers who prefer to call, and customers who want proof the business exists before paying a deposit, have no way to do either.",
+      "root_cause": "The contact page offers only a form, which leaves buyers who want to call or verify the business with no route.",
+      "intended_behavior": "The form is meant to keep enquiries organised; it works for people who are comfortable submitting personal details to an unverified business.",
+      "heuristic_refs": ["TR-02"],
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/contact", "location": "Contact page body", "session": "S3", "log_ref": "S3-E02",
+          "description": "The skeptical buyer looked for a phone number or address to verify the business and found only a form." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "Footer", "session": "S2", "log_ref": "S2-E04",
+          "description": "The low-literacy persona looked through the header, contact page and footer for a number to call and gave up." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/contact", "location": "Contact page body", "session": "L2", "log_ref": "L2-E03",
+          "description": "TR-02 fails: the only contact route is a form." }
+      ],
+      "reproduction": {
+        "steps": ["Open the Contact page.", "Look for any phone number, email address or postal address on the page.", "Scroll to the footer and look again."],
+        "expected": "At least one direct contact route (phone or email) and a postal address are visible.",
+        "actual": "Only the contact form is present."
+      },
+      "affected_personas": ["skeptic", "low-literacy"],
+      "severity": {
+        "impact": { "score": "major", "reason": "Two personas could not find a way to call, and the skeptic could not verify the business." },
+        "frequency": { "score": "occasional", "reason": "Only visitors who want to call or verify are affected." },
+        "persistence": { "score": "recurring", "reason": "The gap remains on every visit." },
+        "overall_severity": "moderate"
+      },
+      "confidence": { "score": "medium", "reason": "Consistent across three sessions, but the evidence is text only and a contact link could exist in an image." },
+      "baseline_comparison": "Local businesses almost always show a phone number or email next to or beside the contact form.",
+      "remediation": {
+        "strategy": "Show a phone number, an email address and the shop address on the contact page and in the footer.",
+        "effort": "low"
+      },
+      "quick_win": false,
+      "found_by": ["S3", "S2", "L2"],
+      "verification": { "status": "verified", "notes": "Re-fetched the contact page and footer: no phone, email or address in the page text." }
+    },
+    {
+      "verdict": "confirmed",
+      "id": "P4",
+      "title": "The inquiry form asks for phone and budget before showing any price",
+      "category": "flows",
+      "description": "The bespoke order form has nine fields, including a required phone number, an exact date and a budget range, and gives no price guidance anywhere on the route to it.",
+      "user_impact": "Visitors must commit personal details and guess a budget before they learn whether the bakery fits their needs, so some stop at the form.",
+      "root_cause": "The inquiry form demands nine fields including budget before any price is shown, which makes visitors commit before they can judge fit.",
+      "intended_behavior": "The form is meant to collect everything the bakers need to quote; it works for visitors who already trust the business and know their budget.",
+      "heuristic_refs": ["FL-01", "CT-01"],
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/atelier/bespoke-orders", "location": "Inquiry form fields", "session": "L3", "log_ref": "L3-E01",
+          "description": "Nine fields are present; phone and budget range are required." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/atelier/bespoke-orders", "location": "Budget range field", "session": "L3", "log_ref": "L3-E02",
+          "description": "The budget options carry no explanation of what each range buys." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/atelier/bespoke-orders", "location": "Budget range field", "session": "S1", "log_ref": "S1-E04",
+          "description": "The first-time visitor hesitated at the budget field and said he had no idea what a cake costs." }
+      ],
+      "reproduction": {
+        "steps": ["Open Bespoke Orders.", "Read the form from top to bottom.", "Try to decide what to enter in the budget field using only information on the site."],
+        "expected": "The visitor can choose a budget from information shown on the site.",
+        "actual": "No price information is available, so the budget field is a guess."
+      },
+      "affected_personas": ["first-timer", "skeptic"],
+      "severity": {
+        "impact": { "score": "major", "reason": "Visitors are asked to commit to a budget they cannot estimate." },
+        "frequency": { "score": "common", "reason": "Every visitor who reaches the form meets the budget field." },
+        "persistence": { "score": "one_time", "reason": "Visitors only fill the form once." },
+        "overall_severity": "major"
+      },
+      "confidence": { "score": "medium", "reason": "Form structure is visible in the text; the actual drop-off cannot be measured." },
+      "baseline_comparison": "Custom-order forms from comparable bakeries usually ask four or five questions and show starting prices or examples nearby.",
+      "remediation": {
+        "strategy": "Cut the form to the fields needed for a first reply, make the budget optional with example price ranges, and show starting prices next to the form.",
+        "effort": "medium"
+      },
+      "quick_win": false,
+      "found_by": ["L3", "S1"],
+      "verification": { "status": "verified", "notes": "Re-fetched the order page: nine fields, phone and budget required, no price hint within two clicks." }
+    },
+    {
+      "verdict": "confirmed",
+      "id": "P5",
+      "title": "No price or price range appears anywhere on the site",
+      "category": "content",
+      "description": "None of the product, collection or order pages state a price, a starting price or an example price.",
+      "user_impact": "Visitors cannot judge whether the bakery fits their budget, so some abandon and skeptical visitors read the silence as a warning sign.",
+      "root_cause": "The site publishes no price or starting price anywhere, which leaves visitors unable to judge whether the bakery fits their budget.",
+      "intended_behavior": "Pricing is probably withheld because every cake is custom; a 'from' price or example prices would still answer the question.",
+      "heuristic_refs": ["CT-01", "CL-08"],
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/collections", "location": "Collections page", "session": "S1", "log_ref": "S1-E05",
+          "description": "The first-time visitor searched seven pages for a price and gave up." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/collections", "location": "All primary pages", "session": "L2", "log_ref": "L2-E05",
+          "description": "CT-01 fails for price: no page states a price, starting price or example." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/faq", "location": "FAQ page", "session": "S3", "log_ref": "S3-E06",
+          "description": "The skeptical buyer noted that missing prices made them assume the cakes are expensive or the business is not serious." }
+      ],
+      "reproduction": {
+        "steps": ["Open Collections, Bespoke Orders, FAQ and Journal.", "Search each page for any amount of money."],
+        "expected": "At least a starting price or an example price per cake size.",
+        "actual": "No page states any price."
+      },
+      "affected_personas": ["first-timer", "skeptic"],
+      "severity": {
+        "impact": { "score": "major", "reason": "A core purchase question cannot be answered on the site." },
+        "frequency": { "score": "common", "reason": "Price is the first question for most buyers." },
+        "persistence": { "score": "recurring", "reason": "The question stays open until the visitor contacts the bakery." },
+        "overall_severity": "major"
+      },
+      "confidence": { "score": "medium", "reason": "Text search found no price; a price shown only in an image would be missed." },
+      "baseline_comparison": "Custom-cake bakeries commonly publish a starting price or a price table by size, even when each order is quoted individually.",
+      "remediation": {
+        "strategy": "Publish starting prices or a size-and-price table, and state that custom designs are quoted individually.",
+        "effort": "medium"
+      },
+      "quick_win": false,
+      "found_by": ["S1", "L2", "S3"],
+      "verification": { "status": "verified", "notes": "Searched the text of the collections, order, visit, FAQ and journal pages for currency symbols and amounts: none found." }
+    },
+    {
+      "verdict": "confirmed",
+      "id": "P6",
+      "title": "The same service has three different names",
+      "category": "content",
+      "description": "The ordering service is called 'Bespoke Orders' in the page title, 'Custom Cakes' in the footer and 'Atelier requests' in the contact form's topic list.",
+      "user_impact": "Visitors cannot tell whether these are the same service, which adds doubt at the moment they are about to enquire.",
+      "root_cause": "The site uses three names for one service across the menu, footer and form, which makes visitors unsure they are in the right place.",
+      "intended_behavior": "Each label was probably written for its own context; together they read as three different offers.",
+      "heuristic_refs": ["CL-10", "NN-4"],
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/atelier/bespoke-orders", "location": "Page title, footer, contact form topic list", "session": "L1", "log_ref": "L1-E03",
+          "description": "Three different names appear for the same ordering route." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/contact", "location": "Contact form topic list", "session": "L2", "log_ref": "L2-E04",
+          "description": "CL-10 fails: the contact form lists 'Atelier requests' as a separate topic from 'Custom Cakes'." }
+      ],
+      "reproduction": {
+        "steps": ["Note the name of the ordering page in the page title.", "Note the name in the footer.", "Open the contact form and read the topic list."],
+        "expected": "One name is used everywhere.",
+        "actual": "Three names are used."
+      },
+      "affected_personas": ["first-timer"],
+      "severity": {
+        "impact": { "score": "minor", "reason": "It adds doubt but does not stop anyone." },
+        "frequency": { "score": "common", "reason": "Anyone who reads the footer or the form sees it." },
+        "persistence": { "score": "one_time", "reason": "A visitor works it out once." },
+        "overall_severity": "minor"
+      },
+      "confidence": { "score": "medium", "reason": "Two lens audits found it; no persona task depended on it." },
+      "baseline_comparison": "Consistent naming across navigation, headings and forms is standard on small business sites.",
+      "remediation": {
+        "strategy": "Choose one name (for example 'Custom cakes') and use it in the menu, page title, footer and form.",
+        "effort": "low"
+      },
+      "quick_win": false,
+      "found_by": ["L1", "L2"],
+      "verification": { "status": "verified", "notes": "Confirmed the three names in the order page title, the footer link and the contact form topic list." }
+    },
+    {
+      "verdict": "needs_validation",
+      "id": "P7",
+      "title": "The home page image carousel may auto-advance without a pause control",
+      "category": "accessibility",
+      "description": "The page structure describes a slideshow of seasonal cakes, but the text evidence does not show whether it moves on its own or whether a pause control exists.",
+      "heuristic_refs": ["WCAG-2.2.2"],
+      "evidence": [
+        { "kind": "inferred", "tier": "text", "url": "https://brightleaf-bakery.example/", "location": "Home page slideshow region", "session": "L4", "log_ref": "L4-E01",
+          "description": "The fetched content lists five slides inside one region and no visible pause or stop label." }
+      ],
+      "open_question": "Does the home-page carousel advance automatically for more than five seconds without a visible pause control?",
+      "resolution_path": "Open the home page in a rendered browser for at least ten seconds and look for a pause control, or ask the developer.",
+      "affected_personas": ["low-literacy"],
+      "found_by": ["L4"]
+    },
+    {
+      "verdict": "rejected",
+      "id": "P8",
+      "title": "The footer has no sitemap link",
+      "reason": "Sitemap links are optional and the main navigation reaches every page within two clicks (L1-E02); no persona looked for one.",
+      "rejection_class": "below_bar",
+      "found_by": ["L1"]
+    }
+  ],
+  "strengths": [
+    {
+      "id": "ST1",
+      "title": "FAQ answers are short, plain and cover cancellation and allergens",
+      "category": "content",
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/faq", "location": "FAQ page", "session": "L2", "log_ref": "L2-E06",
+          "description": "Answers use everyday words, short paragraphs and name the notice period for changes." },
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/faq", "location": "Cancellation answer", "session": "S3", "log_ref": "S3-E04",
+          "description": "The skeptical buyer found what happens on cancellation in one read and said it raised their trust." }
+      ],
+      "why_it_works": "It answers the questions buyers worry about in the words they use.",
+      "preserve_note": "Keep the plain wording when adding prices; link the FAQ from the order form."
+    },
+    {
+      "id": "ST2",
+      "title": "The order form says what happens next",
+      "category": "flows",
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/atelier/bespoke-orders", "location": "Text above the submit button", "session": "L3", "log_ref": "L3-E03",
+          "excerpt": "We reply within 24 hours", "description": "A reply time and next step are stated next to the submit button." }
+      ],
+      "why_it_works": "Visitors know what to expect after sending personal details.",
+      "preserve_note": "Keep this promise visible if the form is shortened."
+    },
+    {
+      "id": "ST3",
+      "title": "Opening hours and address are plain text on the Visit page",
+      "category": "content",
+      "evidence": [
+        { "kind": "observed", "tier": "text", "url": "https://brightleaf-bakery.example/visit", "location": "Visit page body", "session": "S1", "log_ref": "S1-E06",
+          "description": "Hours and address were found in two steps and are readable as text." }
+      ],
+      "why_it_works": "Two personas found hours and address on the first try.",
+      "preserve_note": "Repeat the hours in the footer rather than moving them."
+    }
+  ]
+}

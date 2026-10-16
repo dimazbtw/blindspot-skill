@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "run": {
+    "number": 1,
+    "mode": "full",
+    "date": "2026-10-14",
+    "evidence_tier": "text",
+    "isolation": "full",
+    "language": "en",
+    "brief_present": false,
+    "brief_opened": false,
+    "prior_run": null
+  },
+  "site": {
+    "url": "https://brightleaf-bakery.example",
+    "slug": "brightleaf-bakery.example",
+    "type": "lead-gen-local",
+    "inferred_audience": "Local customers ordering celebration cakes and pastries",
+    "inferred_goal": "Collect custom cake order inquiries"
+  },
+  "personas": [
+    { "id": "first-timer", "name": "First-time visitor", "source": "builtin", "rationale": "Most traffic to a local bakery arrives from search or a recommendation with no prior knowledge." },
+    { "id": "low-literacy", "name": "Low digital literacy", "source": "builtin", "rationale": "Older local customers are a core audience for celebration cakes." },
+    { "id": "skeptic", "name": "Skeptical buyer", "source": "builtin", "rationale": "A custom order involves a deposit and a date that cannot be moved, so buyers look for proof the business is real." }
+  ],
+  "units": [
+    { "id": "U-001", "type": "first_impression", "target": "https://brightleaf-bakery.example/", "personas": ["first-timer"], "priority": "high", "status": "tested", "sessions": ["S1"],
+      "five_second": { "understood_what": "no", "understood_audience": "partly", "understood_action": "no", "gut_rating": 3, "would_continue": "maybe" } },
+    { "id": "U-002", "type": "first_impression", "target": "https://brightleaf-bakery.example/", "personas": ["low-literacy"], "priority": "high", "status": "tested", "sessions": ["S2"],
+      "five_second": { "understood_what": "no", "understood_audience": "no", "understood_action": "no", "gut_rating": 2, "would_continue": "no" } },
+    { "id": "U-003", "type": "first_impression", "target": "https://brightleaf-bakery.example/", "personas": ["skeptic"], "priority": "high", "status": "tested", "sessions": ["S3"],
+      "five_second": { "understood_what": "partly", "understood_audience": "partly", "understood_action": "partly", "gut_rating": 3, "would_continue": "maybe" } },
+
+    { "id": "U-004", "type": "task", "target": "Find out whether the bakery can make a birthday cake for ten people", "personas": ["first-timer"], "priority": "high", "status": "tested", "sessions": ["S1"],
+      "optimal_steps": 3, "steps_taken": 8, "outcome": "completed_with_difficulty", "first_click_correct": false },
+    { "id": "U-005", "type": "task", "target": "Find out roughly how much a custom cake costs", "personas": ["first-timer"], "priority": "high", "status": "tested", "sessions": ["S1"],
+      "optimal_steps": null, "steps_taken": 7, "outcome": "abandoned", "first_click_correct": false, "notes": "No price information exists on the site, so there is no optimal path." },
+    { "id": "U-006", "type": "task", "target": "Find the opening hours and the shop address", "personas": ["first-timer"], "priority": "medium", "status": "tested", "sessions": ["S1"],
+      "optimal_steps": 2, "steps_taken": 2, "outcome": "completed", "first_click_correct": true },
+
+    { "id": "U-007", "type": "task", "target": "Order a birthday cake for next weekend", "personas": ["low-literacy"], "priority": "high", "status": "tested", "sessions": ["S2"],
+      "optimal_steps": 3, "steps_taken": 6, "outcome": "completed_incorrectly", "first_click_correct": false, "notes": "Ended on the newsletter sign-up believing it was the order form." },
+    { "id": "U-008", "type": "task", "target": "Find a phone number to call the bakery", "personas": ["low-literacy"], "priority": "high", "status": "tested", "sessions": ["S2"],
+      "optimal_steps": null, "steps_taken": 6, "outcome": "abandoned", "first_click_correct": false, "notes": "No phone number exists anywhere on the site." },
+    { "id": "U-009", "type": "task", "target": "Find the opening hours and the shop address", "personas": ["low-literacy"], "priority": "medium", "status": "tested", "sessions": ["S2"],
+      "optimal_steps": 2, "steps_taken": 3, "outcome": "completed", "first_click_correct": true },
+
+    { "id": "U-010", "type": "task", "target": "Check whether this is a real local business that can be trusted", "personas": ["skeptic"], "priority": "high", "status": "tested", "sessions": ["S3"],
+      "optimal_steps": 3, "steps_taken": 6, "outcome": "completed_with_difficulty", "first_click_correct": false },
+    { "id": "U-011", "type": "task", "target": "Find out what happens if I need to cancel or change a custom order", "personas": ["skeptic"], "priority": "high", "status": "tested", "sessions": ["S3"],
+      "optimal_steps": 2, "steps_taken": 5, "outcome": "completed_with_difficulty", "first_click_correct": false },
+    { "id": "U-012", "type": "task", "target": "Work out how to request a quote for a wedding cake", "personas": ["skeptic"], "priority": "medium", "status": "tested", "sessions": ["S3"],
+      "optimal_steps": 3, "steps_taken": 4, "outcome": "completed", "first_click_correct": true },
+
+    { "id": "U-013", "type": "exploration", "target": "Journal, Collections and FAQ pages, browsing without a goal", "personas": ["first-timer"], "priority": "medium", "status": "tested", "sessions": ["S1"] },
+
+    { "id": "U-014", "type": "lens", "lens": "heuristics", "target": "Primary templates: home, collections, bespoke orders, visit, contact, FAQ", "priority": "high", "status": "tested", "sessions": ["L1"] },
+    { "id": "U-015", "type": "lens", "lens": "content_trust", "target": "Primary templates: home, collections, bespoke orders, visit, contact, FAQ", "priority": "high", "status": "tested", "sessions": ["L2"] },
+    { "id": "U-016", "type": "lens", "lens": "flows_forms", "target": "Bespoke order inquiry form and contact form", "priority": "high", "status": "tested", "sessions": ["L3"] },
+    { "id": "U-017", "type": "lens", "lens": "accessibility", "target": "Home, bespoke orders and contact pages (text-level checks only)", "priority": "medium", "status": "partial", "sessions": ["L4"],
+      "reason": "Text-only evidence: keyboard, focus, contrast and target size could not be checked." },
+    { "id": "U-018", "type": "lens", "lens": "mobile_performance", "target": "Home and bespoke orders form", "priority": "medium", "status": "partial", "sessions": ["L5"],
+      "reason": "Text-only evidence: only content length and form size could be reviewed." },
+
+    { "id": "U-019", "type": "state", "target": "Validation errors on the bespoke order inquiry form", "priority": "low", "status": "skipped",
+      "reason": "Submitting forms is out of scope for this run." },
+    { "id": "U-020", "type": "state", "target": "404 page", "priority": "medium", "status": "tested", "sessions": ["L3"] },
+
+    { "id": "U-021", "type": "flow", "target": "Bespoke cake inquiry: from the home page to the last step of the form", "priority": "high", "status": "tested", "sessions": ["L3", "S1"] },
+
+    { "id": "U-022", "type": "viewport", "viewport": "mobile", "target": "Home and bespoke orders", "priority": "medium", "status": "skipped",
+      "reason": "The text-only evidence tier cannot show a rendered mobile layout." },
+    { "id": "U-023", "type": "viewport", "viewport": "desktop", "target": "Home and bespoke orders", "priority": "low", "status": "skipped",
+      "reason": "The text-only evidence tier cannot show a rendered desktop layout." }
+  ]
+}

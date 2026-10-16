@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Coverage ledger",
+  "description": "The unit-of-work register for one test run. Every page, flow, task, state, viewport and lens sweep that the run intends to cover is a unit. Structural rules that JSON Schema cannot express (persona completeness, stage gates, outcome/type consistency) are enforced by scripts/validate_ledger.py.",
+  "type": "object",
+  "required": ["schema_version", "run", "site", "personas", "units"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "run": { "$ref": "#/$defs/run" },
+    "site": { "$ref": "#/$defs/site" },
+    "personas": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/persona" }
+    },
+    "units": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/unit" }
+    }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "required": ["number", "mode", "date", "evidence_tier", "isolation", "language"],
+      "additionalProperties": false,
+      "properties": {
+        "number": { "type": "integer", "minimum": 1 },
+        "mode": { "enum": ["full", "quick", "focus", "retest", "deepen"] },
+        "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "evidence_tier": {
+          "enum": ["rendered", "provided", "text"],
+          "description": "rendered = real browser navigation; provided = screenshots or HTML supplied by the person; text = fetched page text only."
+        },
+        "isolation": {
+          "enum": ["full", "degraded"],
+          "description": "full = every role ran in a fresh isolated agent; degraded = roles shared one context."
+        },
+        "language": { "type": "string", "minLength": 2 },
+        "brief_present": { "type": "boolean" },
+        "brief_opened": { "type": "boolean" },
+        "prior_run": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "site": {
+      "type": "object",
+      "required": ["url", "slug", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "minLength": 4 },
+        "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$" },
+        "type": {
+          "enum": [
+            "ecommerce",
+            "saas",
+            "lead-gen-local",
+            "content-publisher",
+            "portfolio",
+            "marketplace",
+            "institutional-nonprofit",
+            "documentation",
+            "booking-hospitality",
+            "other"
+          ]
+        },
+        "inferred_audience": { "type": "string" },
+        "inferred_goal": { "type": "string" },
+        "weight_profile": { "enum": ["default", "transactional", "app", "content"] }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "required": ["id", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "name": { "type": "string" },
+        "source": { "enum": ["builtin", "custom"] },
+        "rationale": { "type": "string" }
+      }
+    },
+    "five_second": {
+      "type": "object",
+      "required": ["understood_what", "understood_audience", "understood_action", "gut_rating", "would_continue"],
+      "additionalProperties": false,
+      "properties": {
+        "understood_what": { "enum": ["yes", "partly", "no"] },
+        "understood_audience": { "enum": ["yes", "partly", "no"] },
+        "understood_action": { "enum": ["yes", "partly", "no"] },
+        "gut_rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "would_continue": { "enum": ["yes", "maybe", "no"] }
+      }
+    },
+    "unit": {
+      "type": "object",
+      "required": ["id", "type", "target", "priority", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^U-[0-9]{3,}$" },
+        "type": {
+          "enum": ["first_impression", "task", "exploration", "lens", "state", "viewport", "flow"]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "personas": { "type": "array", "items": { "type": "string" } },
+        "lens": {
+          "enum": ["heuristics", "content_trust", "flows_forms", "mobile_performance", "accessibility"]
+        },
+        "viewport": { "enum": ["mobile", "tablet", "desktop"] },
+        "priority": { "enum": ["high", "medium", "low"] },
+        "status": { "enum": ["untested", "tested", "partial", "blocked", "skipped"] },
+        "reason": { "type": "string" },
+        "sessions": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[SL][0-9]+$" }
+        },
+        "optimal_steps": { "type": ["integer", "null"], "minimum": 1 },
+        "steps_taken": { "type": ["integer", "null"], "minimum": 0 },
+        "outcome": {
+          "enum": ["completed", "completed_with_difficulty", "completed_incorrectly", "abandoned", "blocked"]
+        },
+        "first_click_correct": { "type": ["boolean", "null"] },
+        "five_second": { "$ref": "#/$defs/five_second" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
